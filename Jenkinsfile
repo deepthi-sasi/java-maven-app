@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "deploying"
+                    echo "building"
                 }
             }
 
