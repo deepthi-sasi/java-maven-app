@@ -1,38 +1,27 @@
 def gv
 pipeline {
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
+    tools{
+        maven 'maven-3.9'
     }
-
     stages {
-        stage("init") {
+        stage("Build Jar") {
             steps {
                 script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
-        stage("Build") {
-            steps {
-                script {
-                    gv.buildApp()
-
+                    echo "building the application.."
+                    sh 'mvn package'
                 }
             }
         }
 
-        stage("Test") {
-            when {
-                expression {
-                    params.executeTests
-                }
-            }
+        stage("building the image ") {
             steps {
                 script {
-                    gv.testApp()
-
+                    echo "building the docker image.."
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')])
+                        sh 'docker build -t deepthisasi/demo-app:jma-2.0'
+                        sh 'docker login -u $USER --password-stdin'
+                        sh 'docker push deepthisasi/demo-app:jma-2.0'
                 }
             }
         }
