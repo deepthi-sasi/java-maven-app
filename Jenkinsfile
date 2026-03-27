@@ -10,6 +10,7 @@ pipeline {
         maven 'maven3.9'
     }
 
+    stages {
         stage("Build Jar") {
             steps {
                 script {
@@ -35,5 +36,5 @@ pipeline {
             }
         }
 
-
+    }
 }
