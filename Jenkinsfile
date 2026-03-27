@@ -25,10 +25,13 @@ pipeline {
             }
         }
 
-        stage("building the image ") {
+        stage("Build and push the image") {
             steps {
                 script {
-                    buildImage'deepthisasi/demo-app:jma2.3'
+
+                    buildImage 'deepthisasi/demo-app:jma2.4'
+                    dockerLogin()
+                    dockerImagePush 'deepthisasi/demo-app:jma2.4'
                 }
             }
         }
