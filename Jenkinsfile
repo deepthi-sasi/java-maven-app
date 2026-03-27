@@ -28,7 +28,7 @@ pipeline {
         stage("building the image ") {
             steps {
                 script {
-                    buildImage()
+                    buildImage'deepthisasi/demo-app:jma2.3'
                 }
             }
         }
