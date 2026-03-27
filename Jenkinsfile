@@ -1,40 +1,39 @@
-def gv
+#!/user/bin/env groovy
+import org.apache.tomcat.jni.Library
 
+@Library('jenkins-shared-library')
+
+def gv
 pipeline {
     agent any
-    stages {
-        stage("test") {
-            steps {
-                script {
-                    echo "tetsing the application"
-                    echo "executing pipeline for branch $BRANCH_NAME"
-                }
-            }
-        }
-        stage("build") {
-            when{
-                expression {
-                    BRANCH_NAME == "master"
-                }
-            }
-            steps {
-                script {
-                    echo "building"
-                }
-            }
+    tools {
+        maven 'maven3.9'
+    }
 
-        }
-        stage("deploy") {
-            when{
-                expression {
-                    BRANCH_NAME == "master"
-                }
-            }
+        stage("Build Jar") {
             steps {
                 script {
-                    echo "deploying"
+                    buildJar()
                 }
             }
         }
-    }   
+
+        stage("building the image ") {
+            steps {
+                script {
+                    buildImage()
+                }
+            }
+        }
+
+
+        stage("Deploy") {
+            steps {
+                script {
+                    gv.deployApp()
+                }
+            }
+        }
+    }
+
 }
